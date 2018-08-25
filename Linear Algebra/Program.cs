@@ -1,8 +1,6 @@
+using Linear_Algebra.Types;
+using Linear_Algebra.Types.Tests;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Linear_Algebra
 {
@@ -10,7 +8,11 @@ namespace Linear_Algebra
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            MatrixTest.TestSarrus();
+            MatrixTest.TestMatrixAddSub();
+            MatrixTest.TesetLaPlace();
+            VectorTest.VectorConstructionTest();
+
             Console.ReadKey();
         }
     }
