@@ -11,8 +11,13 @@ namespace Linear_Algebra
             MatrixTest.TestSarrus();
             MatrixTest.TestMatrixAddSub();
             MatrixTest.TesetLaPlace();
+            MatrixTest.TestTransposedMatrix();
             VectorTest.VectorConstructionTest();
 
+            MatrixTest.TestSquareMatrixTrace();
+            MatrixTest.TestSqaureMatrixUnifiedConstructor();
+
+            MatrixTest.TestHiddenGetSubMatrix();
             Console.ReadKey();
         }
     }

@@ -74,6 +74,7 @@ namespace Linear_Algebra.Types
         /// </summary>
         /// <param name="vector1"></param>
         /// <param name="vector2"></param>
+        /// <exception cref="WrongFormatException">An exception is thrown if the vectors are of different size.</exception>
         /// <returns></returns>
         public static Vector operator +(Vector vector1, Vector vector2)
         {
@@ -85,7 +86,7 @@ namespace Linear_Algebra.Types
             Vector result = new Vector(vector1.Dimensions);
             for(uint i = 0; i < vector1.Dimensions; i++)
             {
-                result.Values[i] = vector1[i] + vector2[i];
+                result[i] = vector1[i] + vector2[i];
             }
             return result;
         }
@@ -95,6 +96,7 @@ namespace Linear_Algebra.Types
         /// </summary>
         /// <param name="vector1"></param>subtract
         /// <param name="vector2"></param>
+        /// <exception cref="WrongFormatException">An exception is thrown if the vectors are of different size.</exception>
         /// <returns></returns>
         public static Vector operator -(Vector vector1, Vector vector2)
         {
@@ -106,7 +108,7 @@ namespace Linear_Algebra.Types
             Vector result = new Vector(vector1.Dimensions);
             for (uint i = 0; i < vector1.Dimensions; i++)
             {
-                result.Values[i] = vector1[i] - vector2[i];
+                result[i] = vector1[i] - vector2[i];
             }
             return result;
         }

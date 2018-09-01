@@ -50,6 +50,7 @@
     <Compile Include="Types\Matrix.cs" />
     <Compile Include="Types\Point2D.cs" />
     <Compile Include="Types\Point3D.cs" />
+    <Compile Include="Types\SquareMatrix.cs" />
     <Compile Include="Types\Tests\MatrixTest.cs" />
     <Compile Include="Types\Tests\VectorTest.cs" />
     <Compile Include="Types\Vector.cs" />

@@ -11,34 +11,29 @@ namespace Linear_Algebra.Types
     {
         #region constructors
         /// <summary>
+        /// Constructs a 1 x 1 matrix with the value 0.
+        /// </summary>
+        public Matrix() => Values = new double[1, 1] { { 0 } };
+        /// <summary>
         /// Construct a matrix with the format defined by lines and columns.
         /// </summary>
         /// 
         /// <param name="lines"></param>
         /// <param name="columns"></param>
-        public Matrix(uint lines, uint columns)
-        {
-            Values = new double[lines, columns];
-        }
+        public Matrix(uint lines, uint columns) => Values = new double[lines, columns];
 
         /// <summary>
         /// Construct a matrix with the values supplied by the array.
         /// </summary>
         /// 
         /// <param name="values"></param>
-        public Matrix(double[,] values)
-        {
-            Values = values;
-        }
+        public Matrix(double[,] values) => Values = values;
 
         /// <summary>
         /// Copy constructor.
         /// </summary>
         /// <param name="matrix"></param>
-        public Matrix(Matrix matrix)
-        {
-            Values = (double[,]) matrix.Values.Clone();
-        }
+        public Matrix(Matrix matrix) => Values = (double[,]) matrix.Values.Clone();
         #endregion
 
         #region Indexer
@@ -256,79 +251,12 @@ namespace Linear_Algebra.Types
 
         #region Public Methods
         /// <summary>
-        /// Get the trace of a matrix.
-        /// 
-        /// The trace of a square(!) matrix is defined as the sum of the main diagonals elements.
+        /// Calculate inverse matrix of this matrix.
         /// </summary>
         /// <returns></returns>
-        public double Trace()
+        public Matrix Inverse()
         {
-            if (!IsSquare) throw new WrongFormatException("This operation can only be done with square matrices.");
-
-            double result = 0;
-            for (uint i = 0; i < Lines; i++)
-            {
-                result += this[i, i];
-            }
-            return result;
-        }
-
-        /// <summary>
-        /// Calculate the determinant of a 3 x 3 matrix.
-        /// </summary>
-        /// <exception cref="WrongFormatException"></exception>
-        /// <returns>The determinant value of the matrix.</returns>
-        public double Sarrus()
-        {
-            if (!IsSquare) throw new WrongFormatException("This operation can only be done with square matrices.");
-
-            if (Lines != 3 || Columns != 3)
-            {
-                throw new WrongFormatException("This operation can only be performed on 2x2 matrices");
-            }
-
-            return this[0, 0] * this[1, 1] * this[2, 2] +
-                this[0, 1] * this[1, 2] * this[2, 0] +
-                this[0, 2] * this[1, 0] * this[2, 1] -
-                this[0, 2] * this[1, 1] * this[2, 0] -
-                this[0, 0] * this[1, 2] * this[2, 1] -
-                this[0, 1] * this[1, 0] * this[2, 2];
-        }
-
-        /// <summary>
-        /// Calculate the determinant of a 2 x 2 matrix.
-        /// </summary>
-        /// <exception cref="WrongFormatException"></exception>
-        /// <returns>The determinant value of the matrix.</returns>
-        public double Determinaten2x2()
-        {
-            if (!IsSquare) throw new WrongFormatException("This operation can only be done with square matrices.");
-
-            if (Lines != 2 || Columns != 2)
-            {
-                throw new WrongFormatException("This operation can only be performed on 2x2 matrices");
-            }
-            return this[0, 0] * this[1, 1] - this[0, 1] * this[1, 0];
-        }
-
-        /// <summary>
-        /// Caclulate the determinant of a matrix using the La Place algorithm.
-        /// </summary>
-        /// <remarks>Performance wise this is a very expensive calculation.</remarks>
-        /// <returns></returns>
-        public double LaPlaceDeterminant()
-        {
-            if (Lines == 1 && Columns == 1)
-                return this[0, 0];
-
-            double result = 0;
-            for (uint i = 0; i < Columns; i++)
-            {
-                var complement = AlgebraicComplement(0, i);
-                var complementProduct = this[0, i] * complement;                
-                result += complementProduct;
-            }
-            return result;
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -338,27 +266,6 @@ namespace Linear_Algebra.Types
         public double Rank()
         {
             throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// The algebraic complement of a matrix index is the alternatingly positive or negative value of a sub determinant of the sub matrix that
-        /// you get by discarding the line and column of the given index.
-        /// </summary>
-        /// <param name="lineIndex"></param>
-        /// <param name="columnIndex"></param>
-        /// <returns></returns>
-        public double AlgebraicComplement(uint lineIndex, uint columnIndex)
-        {
-            if (Lines == 1 && Columns == 1)
-                return lineIndex % 2 == 0 ? this[0, 0] : -this[0,0];
-
-            //if (Lines == 2 && Columns == 2)
-            //    return lineIndex % 2 == 0 ? Determinaten2x2() : -Determinaten2x2();
-
-            //if (Lines == 3 && Columns == 3)
-            //    return lineIndex % 2 == 0 ? Sarrus() : -Sarrus();
-
-            return (lineIndex + columnIndex) % 2 == 0 ? GetSubMatrix(lineIndex, columnIndex).LaPlaceDeterminant() : -GetSubMatrix(lineIndex, columnIndex).LaPlaceDeterminant();
         }
 
         /// <summary>
@@ -385,10 +292,7 @@ namespace Linear_Algebra.Types
         /// <returns></returns>
         public Vector GetLineVector(uint indexLine)
         {
-            if(indexLine >= Lines)
-            {
-                throw new IndexOutOfRangeException();
-            }
+            if(indexLine >= Lines) throw new IndexOutOfRangeException();
 
             double[] values = new double[Columns];
 
@@ -407,10 +311,7 @@ namespace Linear_Algebra.Types
         /// <returns></returns>
         public Vector GetColumnVector(uint indexColumn)
         {
-            if (indexColumn >= Columns)
-            {
-                throw new IndexOutOfRangeException();
-            }
+            if (indexColumn >= Columns) throw new IndexOutOfRangeException();
 
             double[] values = new double[Lines];
 
@@ -427,9 +328,11 @@ namespace Linear_Algebra.Types
         /// </summary>
         /// <param name="ignoredLine"></param>
         /// <param name="ignoredColumn"></param>
+        /// <exception cref="IndexOutOfRangeException">Is thrown if the indices are higher than the allowed range.</exception>
         /// <returns></returns>
         public Matrix GetSubMatrix(uint ignoredLine, uint ignoredColumn)
         {
+            if (ignoredLine >= Lines || ignoredColumn >= Columns) throw new IndexOutOfRangeException();
             Matrix result = new Matrix(Lines - 1, Columns - 1);
 
             for(uint i = 0, ii = 0; i < Lines; i++)
@@ -444,6 +347,59 @@ namespace Linear_Algebra.Types
                 ii++;
             }
             return result;
+        }
+
+        /// <summary>
+        /// Swaps the values of two line of this matrix.
+        /// </summary>
+        /// <param name="line1"></param>
+        /// <param name="line2"></param>
+        public void SwapLines(uint line1, uint line2)
+        {
+            double swapValue;
+
+            for(uint i = 0; i < Columns; i++)
+            {
+                swapValue = this[line1, i];
+                this[line1, i] = this[line2, i];
+                this[line2, i] = swapValue;
+            }
+        }
+
+        /// <summary>
+        /// Adds the multiple of a line of this matrix to another line.
+        /// </summary>
+        /// <param name="factor"></param>
+        /// <param name="lineFrom"></param>
+        /// <param name="lineTo"></param>
+        public void AddMultipleOfLine(double factor, uint lineFrom, uint lineTo)
+        {
+            for(uint i = 0; i < Columns; i++)
+            {
+                this[lineTo, i] += this[lineFrom, i] * factor;
+            }
+        }
+
+        /// <summary>
+        /// Multiply the values of a line with a scalar.
+        /// </summary>
+        /// <param name="scalar"></param>
+        /// <param name="lineIndex"></param>
+        public void MultiplyLineWithScalar(double scalar, uint lineIndex)
+        {
+            for (uint i = 0; i < Columns; i++)
+            {
+                this[lineIndex, i] *= scalar;
+            }
+        }
+
+        /// <summary>
+        /// Convenience function to get a string representation of the format of a matrix.
+        /// </summary>
+        /// <returns></returns>
+        public string GetMatrixFormat()
+        {
+            return Lines + " x " + Columns;
         }
         #endregion
 
@@ -509,10 +465,7 @@ namespace Linear_Algebra.Types
         /// <returns></returns>
         private static double SumOfProductsLineAndColumn(Matrix matrix1, Matrix matrix2, uint lineIndexMatrix1, uint columnIndexMatrix2)
         {
-            if(matrix1.Columns != matrix2.Lines)
-            {
-                throw new WrongFormatException("Matrix formats are invalid for this Operation.");
-            }
+            if(matrix1.Columns != matrix2.Lines) throw new WrongFormatException("Matrix formats are invalid for this Operation.");
 
             double result = 0;
 
@@ -521,6 +474,64 @@ namespace Linear_Algebra.Types
                 result += matrix1[lineIndexMatrix1, i] * matrix2[i, columnIndexMatrix2];
             }
 
+            return result;
+        }
+
+        /// <summary>
+        /// Get the line index with the most zeros in it.
+        /// </summary>
+        /// <remarks>This function is useful to optimize LaPlace determinant calculation.</remarks>
+        /// <returns></returns>
+        private uint GetLineWithMostZeroValues()
+        {
+            // By default if we do not find any zero values we give the first line as result
+            uint result = 0;
+            uint maxNumberOfZeroValues = 0;
+            for(uint i = 0; i < Lines; i++)
+            {
+                uint numberOfZeros = 0;
+                for(uint j = 0; j < Columns; j++)
+                {
+                    if(this[i, j] == 0)
+                    {
+                        numberOfZeros++;
+                    }
+                }
+                if(numberOfZeros > maxNumberOfZeroValues)
+                {
+                    maxNumberOfZeroValues = numberOfZeros;
+                    result = i;
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Get the column index with the most zeros in it.
+        /// </summary>
+        /// <remarks>This function is useful to optimize LaPlace determinant calculation.</remarks>
+        /// <returns></returns>
+        private uint GetColumnsWithMostZeroValues()
+        {
+            // By default if we do not find any zero values we give the first line as result
+            uint result = 0;
+            uint maxNumberOfZeroValues = 0;
+            for (uint i = 0; i < Columns; i++)
+            {
+                uint numberOfZeros = 0;
+                for (uint j = 0; j < Lines; j++)
+                {
+                    if (this[j, i] == 0)
+                    {
+                        numberOfZeros++;
+                    }
+                }
+                if (numberOfZeros > maxNumberOfZeroValues)
+                {
+                    maxNumberOfZeroValues = numberOfZeros;
+                    result = i;
+                }
+            }
             return result;
         }
         #endregion
